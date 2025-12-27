@@ -7,8 +7,6 @@
 #include "trie.h"
 
 
-
-
 char **dice=NULL;
 int ndice=0;
 
@@ -20,7 +18,6 @@ Trie *root=NULL;
 
 char **found;
 int nfound=0;
-
 
 
 void Word_Add(char ***words,int *nwords, char *word) {
@@ -59,9 +56,10 @@ void Dice_Shuffle(char **dice,int ndice) {
 	}
 }
 
+
 void dfs(Trie *trie,int x,int y,int depth) {
 
-	static char word[4*4+1];
+	static char word[4*4+2];
 
 	if(x<0 || x>=4 || y<0 || y>=4) return;
 	if(graph[y][x]) return;
@@ -121,6 +119,7 @@ int cmplen(const void *lhs,const void *rhs) {
 	return strlen(r)-strlen(l);
 }
 
+
 int cmprnd(const void *lhs,const void *rhs) {
 	char *l=*(char**)lhs;
 	char *r=*(char**)rhs;
@@ -131,7 +130,7 @@ int cmprnd(const void *lhs,const void *rhs) {
 int main() {
 
 
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 
 	Dice_Load(&dice,&ndice);
 
@@ -139,7 +138,6 @@ int main() {
 
 //	for(int i=0;i<ndice;i++) puts(dice[i]);
 
-//*
 	int k=0;
 	for(int j=0;j<4;j++) {
 		for(int i=0;i<4;i++) {
@@ -147,7 +145,6 @@ int main() {
 			k++;
 		}
 	}
-//*/
 
 	for(int j=0;j<4;j++) {
 		for(int i=0;i<4;i++) {
@@ -187,6 +184,16 @@ int main() {
 		printf("%s",found[i]);
 	}
 	printf("\n");
+
+	for(int i=0;i<ndice;i++) {
+		free(dice[i]);
+		dice[i]=NULL;
+	}
+
+	for(int i=0;i<nfound;i++) {
+		free(found[i]);
+		found[i]=NULL;
+	}
 
 	return 0;
 }
