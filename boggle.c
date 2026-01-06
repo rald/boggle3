@@ -73,7 +73,7 @@ void dfs(Trie *trie,int x,int y,int depth) {
 	word[depth]=board[y][x];
 	word[depth+1]='\0';
 
-	if(trie->mark && !Word_Find(found,nfound,word)) {
+	if(trie->mark && !Word_Find(found,nfound,word) && strlen(word)>=4) {
 		Word_Add(&found,&nfound,word);
 	}
 
@@ -95,7 +95,7 @@ void dfs(Trie *trie,int x,int y,int depth) {
 				word[depth]='u';
 				word[depth+1]='\0';
 
-				if(trie->mark && !Word_Find(found,nfound,word)) {
+				if(trie->mark && !Word_Find(found,nfound,word) && strlen(word)>=4) {
 					Word_Add(&found,&nfound,word);
 				}
 
