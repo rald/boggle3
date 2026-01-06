@@ -6,6 +6,7 @@
 
 #include "trie.h"
 
+#define MIN_WORD_LEN 3
 
 char **dice=NULL;
 int ndice=0;
@@ -18,6 +19,8 @@ Trie *root=NULL;
 
 char **found;
 int nfound=0;
+
+int score=0;
 
 
 void Word_Add(char ***words,int *nwords, char *word) {
@@ -73,7 +76,7 @@ void dfs(Trie *trie,int x,int y,int depth) {
 	word[depth]=board[y][x];
 	word[depth+1]='\0';
 
-	if(trie->mark && !Word_Find(found,nfound,word) && strlen(word)>=4) {
+	if(trie->mark && !Word_Find(found,nfound,word) && strlen(word)>=MIN_WORD_LEN) {
 		Word_Add(&found,&nfound,word);
 	}
 
@@ -95,7 +98,7 @@ void dfs(Trie *trie,int x,int y,int depth) {
 				word[depth]='u';
 				word[depth+1]='\0';
 
-				if(trie->mark && !Word_Find(found,nfound,word) && strlen(word)>=4) {
+				if(trie->mark && !Word_Find(found,nfound,word) && strlen(word)>=MIN_WORD_LEN) {
 					Word_Add(&found,&nfound,word);
 				}
 
@@ -126,9 +129,29 @@ int cmprnd(const void *lhs,const void *rhs) {
 	return rand()%3-1;
 }
 
+int cmplenasc(const void *lhs,const void *rhs) {
+	char *l=*(char**)lhs;
+	char *r=*(char**)rhs;
+
+	if(strlen(l)-strlen(r)==0) return strcmp(l,r);
+
+	return strlen(l)-strlen(r);
+}
+
+int points(char *word) {
+	int len=strlen(word);
+
+	if(len>=8) return 11;
+	else if(len==7) return 5;
+	else if(len==6) return 3;
+	else if(len==5) return 2;
+	else if(len==4) return 1;
+	else if(len==3) return 1;
+
+	return 0;
+}
 
 int main() {
-
 
 	srand((unsigned int)time(NULL));
 
@@ -176,14 +199,18 @@ int main() {
 		}
 	}
 
-	qsort(found,nfound,sizeof(*found),cmprnd);
-	qsort(found,nfound,sizeof(*found),cmplen);
+	qsort(found,nfound,sizeof(*found),cmplenasc);
+//	qsort(found,nfound,sizeof(*found),cmplen);
+//	qsort(found,nfound,sizeof(*found),cmprnd);
 
 	for(int i=0;i<nfound;i++) {
 		if(i!=0) printf(", ");
 		printf("%s",found[i]);
+		score+=points(found[i]);
 	}
-	printf("\n");
+	printf("\n\n");
+
+	printf("total score: %d\n",score);
 
 	for(int i=0;i<ndice;i++) {
 		free(dice[i]);
